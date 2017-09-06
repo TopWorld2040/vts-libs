@@ -152,42 +152,46 @@ file_to_cpp(vts_BROWSER_SOURCES
 # vts nucleus files
 set(vts-nucleus_SOURCES
   vts/basetypes.hpp vts/basetypes.cpp
-  vts/options.hpp vts/options.cpp
   vts/glue.hpp
   vts/nodeinfo.hpp vts/nodeinfo.cpp
-  vts/multifile.hpp vts/multifile.cpp
   vts/mesh.hpp vts/mesh.cpp
-  vts/meshio.hpp vts/meshio.cpp
+  vts/meshio.hpp vts/meshioCommon.hpp vts/meshioRead.cpp
   vts/metatile.hpp vts/metatile.cpp
-  vts/atlas.hpp vts/atlas.cpp
   vts/navtile.hpp vts/navtile.cpp
-  vts/encoder.hpp vts/encoder.cpp
   vts/csconvertor.hpp vts/csconvertor.cpp
   vts/math.hpp
   vts/subtrees.hpp vts/subtrees.cpp
   vts/visit.hpp
   vts/maskfwd.hpp
   vts/qtree.hpp vts/qtree.cpp
-  vts/tileindex.hpp vts/tileindex.cpp vts/tileindex-io.hpp
-  vts/tileop.hpp vts/tileop.cpp
-  vts/tileflags.hpp vts/tileflags.cpp
   vts/metaflags.hpp vts/metaflags.cpp
-  vts/encodeflags.hpp vts/encodeflags.cpp
   vts/mapconfig.hpp vts/mapconfig.cpp
   vts/types2d.hpp
-  vts/2d.hpp vts/2d.cpp
   vts/urltemplate.hpp vts/urltemplate.cpp
-  vts/urltemplate-po.hpp
-  vts/gil/colors.hpp vts/gil/colors.cpp
-  vts/debug.hpp vts/debug.cpp
   vts/geomextents.hpp vts/geomextents.cpp
   vts/virtualsurface.cpp
+  vts/multifile.hpp vts/multifile.cpp
   vts/tsmap.hpp vts/tsmap.cpp
+  vts/tileop.hpp vts/tileop.cpp
+
+  storage/streams.hpp storage/streams.cpp
   )
 
 # vts core files
 set(vts-core_SOURCES
   vts.hpp vts/vts.cpp
+
+  vts/options.hpp vts/options.cpp
+  vts/urltemplate-po.hpp
+  vts/debug.hpp vts/debug.cpp
+  vts/atlas.hpp vts/atlas.cpp
+  vts/encoder.hpp vts/encoder.cpp
+  vts/tileindex.hpp vts/tileindex.cpp vts/tileindex-io.hpp
+  vts/tileflags.hpp vts/tileflags.cpp
+  vts/encodeflags.hpp vts/encodeflags.cpp
+  vts/2d.hpp vts/2d.cpp
+  vts/gil/colors.hpp vts/gil/colors.cpp
+  vts/meshioWrite.cpp
 
   vts/meshcoverage.cpp
 
@@ -282,16 +286,13 @@ set(vts_SOURCES
 # vts nucleus library
 define_module(LIBRARY vts-libs-nucleus=${vts-libs_VERSION}
   DEPENDS
-  http>=1.1 geo>=1.24 geometry>=1.7 imgproc>=1.21 math>=1.2
+  geo>=1.24 geometry>=1.7 imgproc>=1.21 math>=1.2
   utility>=1.16 dbglog>=1.4 jsoncpp>=2.1 half>=1.1
-
   Boost_IOSTREAMS
   Boost_FILESYSTEM
-  CURL PNG
   )
 
 add_library(vts-libs-nucleus STATIC
-  ${vts-common_SOURCES}
   ${vts-registry_SOURCES}
   ${vts-nucleus_SOURCES}
   )
@@ -306,6 +307,7 @@ if (NOT DEFINED BUILDSYS_NOBUILD_TARGET_vts-libs-core)
     DEPENDS
     vts-libs-nucleus>=${vts-libs_VERSION}
 
+    ${vts-common_SOURCES}
     ${vts-registry_python_DEPENDS}
     ${vts-core_EXTRA_DEPENDS}
     )
