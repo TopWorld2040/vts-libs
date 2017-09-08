@@ -191,7 +191,8 @@ set(vts-core_SOURCES
   vts/encodeflags.hpp vts/encodeflags.cpp
   vts/2d.hpp vts/2d.cpp
   vts/gil/colors.hpp vts/gil/colors.cpp
-  vts/meshioWrite.cpp
+  
+  vts/meshio.hpp vts/meshioCommon.hpp vts/meshioWrite.cpp
 
   vts/meshcoverage.cpp
 
@@ -286,7 +287,7 @@ set(vts_SOURCES
 # vts nucleus library
 define_module(LIBRARY vts-libs-nucleus=${vts-libs_VERSION}
   DEPENDS
-  geo>=1.24 geometry>=1.7 imgproc>=1.21 math>=1.2
+  geo>=1.24 geometry>=1.7 imgproc>=1.20 math>=1.2
   utility>=1.16 dbglog>=1.4 jsoncpp>=2.1 half>=1.1
   Boost_IOSTREAMS
   Boost_FILESYSTEM
@@ -306,8 +307,8 @@ if (NOT DEFINED BUILDSYS_NOBUILD_TARGET_vts-libs-core)
   define_module(LIBRARY vts-libs-core=${vts-libs_VERSION}
     DEPENDS
     vts-libs-nucleus>=${vts-libs_VERSION}
+    http>=1.1
 
-    ${vts-common_SOURCES}
     ${vts-registry_python_DEPENDS}
     ${vts-core_EXTRA_DEPENDS}
     )
@@ -315,6 +316,7 @@ if (NOT DEFINED BUILDSYS_NOBUILD_TARGET_vts-libs-core)
   add_library(vts-libs-core STATIC
     ${vts-registry_python_SOURCES}
 
+    ${vts-common_SOURCES}
     ${vts_BROWSER_SOURCES}
     ${vts-core_SOURCES}
 
